@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>抖音视频采集助手 4.0</title>
+<style>
+:root {
+  --bg: #f7f7f7;
+  --text: #222;
+  --card: #fff;
+  --accent: #007bff;
+  --shadow: rgba(0,0,0,0.1);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --text: #eee;
+    --card: #1e1e1e;
+    --accent: #4dabf7;
+    --shadow: rgba(0,0,0,0.5);
+  }
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 16px;
+  min-height: 100vh;
+}
+h1 {
+  font-size: 26px;
+  margin-bottom: 20px;
+}
+.container {
+  background: var(--card);
+  box-shadow: 0 4px 20px var(--shadow);
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 480px;
+}
+input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  background: var(--bg);
+  color: var(--text);
+}
+button {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  filter: brightness(1.1);
+}
+.loading {
+  margin-top: 16px;
+  text-align: center;
+}
+.spinner {
+  border: 4px solid #ccc;
+  border-top: 4px solid var(--accent);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.card {
+  margin-top: 20px;
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px var(--shadow);
+  padding: 16px;
+  text-align: left;
+  transition: transform 0.2s;
+}
+.card:hover {
+  transform: translateY(-3px);
+}
+.card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+.title {
+  font-weight: bold;
+  font-size: 17px;
+  margin-bottom: 6px;
+}
+.author {
+  color: #888;
+  font-size: 14px;
+}
+.likes {
+  margin-top: 8px;
+  color: #e91e63;
+  font-size: 15px;
+}
+.copy-btn, .export-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 12px;
+  background: #2ecc71;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.3s;
+}
+.copy-btn:hover, .export-btn:hover {
+  background: #27ae60;
+}
+.history {
+  margin-top: 30px;
+}
+.history h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.history-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc3;
+}
+.error { color: #e74c3c; margin-top: 10px; text-align: center; }
+</style>
+</head>
+<body>
+  <h1>🎬 抖音视频采集助手 4.0</h1>
+  <div class="container">
+    <input id="url" placeholder="请输入抖音分享链接，例如：https://v.douyin.com/xxxxxx/" />
+    <button onclick="fetchData()">开始采集</button>
+    <div id="status"></div>
+    <div id="result"></div>
+    <div class="history" id="history">
+      <h2>📜 历史记录</h2>
+      <div id="historyList"></div>
+      <button class="export-btn" onclick="exportCSV()">📦 导出历史记录 CSV</button>
+    </div>
+  </div>
+
+<script>
+const WEBHOOK_URL = 'https://chaim888.chaim.top/webhook-test/ca0a5e3b-e92a-4ed4-8a4f-31bac17c5424';
+
+function saveHistory(data) {
+  const history = JSON.parse(localStorage.getItem('douyinHistory') || '[]');
+  history.unshift(data);
+  localStorage.setItem('douyinHistory', JSON.stringify(history.slice(0, 10)));
+  renderHistory();
+}
+
+function renderHistory() {
+  const historyDiv = document.getElementById('historyList');
+  const history = JSON.parse(localStorage.getItem('douyinHistory') || '[]');
+  if (history.length === 0) {
+    historyDiv.innerHTML = '<p style="color:#888;">暂无历史记录</p>';
+    return;
+  }
+  historyDiv.innerHTML = history.map(item => `
+    <div class="history-item">
+      <div class="title">${item.title || '无标题'}</div>
+      <div class="author">作者：${item.author || '未知'}</div>
+      <div class="likes">❤️ ${item.likes || 0} 赞</div>
+    </div>
+  `).join('');
+}
+
+function exportCSV() {
+  const history = JSON.parse(localStorage.getItem('douyinHistory') || '[]');
+  if (history.length === 0) return alert("没有数据可导出～");
+  const csv = [
+    ["标题", "作者", "点赞数", "视频链接"],
+    ...history.map(h => [h.title || '', h.author || '', h.likes || '', h.video_url || ''])
+  ].map(row => row.join(",")).join("\n");
+  const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "douyin_history.csv";
+  a.click();
+}
+
+async function fetchData() {
+  const inputUrl = document.getElementById('url').value.trim();
+  const resultDiv = document.getElementById('result');
+  const statusDiv = document.getElementById('status');
+
+  if (!inputUrl) {
+    statusDiv.innerHTML = '<p class="error">请输入抖音分享链接</p>';
+    return;
+  }
+  if (!/^https?:\/\/v\.douyin\.com\//.test(inputUrl)) {
+    statusDiv.innerHTML = '<p class="error">❌ 链接格式不正确，请输入抖音分享链接</p>';
+    return;
+  }
+
+  resultDiv.innerHTML = '';
+  statusDiv.innerHTML = '<div class="spinner"></div><p class="loading">采集中，请稍候...</p>';
+
+  try {
+    const res = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: inputUrl })
+    });
+
+    if (!res.ok) throw new Error('请求失败');
+
+    const data = await res.json();
+    statusDiv.innerHTML = '';
+
+    const { title, author, likes, cover, video_url } = data;
+    resultDiv.innerHTML = `
+      <div class="card">
+        ${cover ? `<img src="${cover}" alt="封面图" />` : ''}
+        <div class="title">${title || '无标题'}</div>
+        <div class="author">作者：${author || '未知'}</div>
+        <div class="likes">❤️ 点赞数：${likes || 0}</div>
+        ${video_url ? `<div class="copy-btn" onclick="copyLink('${video_url}')">📋 复制下载链接</div>` : ''}
+      </div>
+    `;
+    saveHistory({ title, author, likes, video_url });
+  } catch (err) {
+    console.error(err);
+    statusDiv.innerHTML = '<p class="error">❌ 出错啦，请检查链接或稍后重试。</p>';
+  }
+}
+
+function copyLink(url) {
+  navigator.clipboard.writeText(url).then(() => {
+    alert('✅ 下载链接已复制！');
+  });
+}
+
+renderHistory();
+</script>
+</body>
+</html>
