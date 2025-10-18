@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>抖音视频采集助手 4.0</title>
+<title>抖音视频采集助手 5.0</title>
 <style>
 :root {
   --bg: #f7f7f7;
@@ -67,10 +67,6 @@ button {
 button:hover {
   filter: brightness(1.1);
 }
-.loading {
-  margin-top: 16px;
-  text-align: center;
-}
 .spinner {
   border: 4px solid #ccc;
   border-top: 4px solid var(--accent);
@@ -130,6 +126,86 @@ button:hover {
 .copy-btn:hover, .export-btn:hover {
   background: #27ae60;
 }
+
+.download-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  border: none;
+  outline: none;
+}
+.download-btn:hover {
+  background: linear-gradient(135deg, #ee5a24 0%, #ff6b6b 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+.download-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 15px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+.stat-item {
+  text-align: center;
+  padding: 8px;
+  background: white;
+  border-radius: 6px;
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.video-info {
+  margin: 15px 0;
+  padding: 12px;
+  background: #e9ecef;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.video-info div {
+  margin: 4px 0;
+  color: #495057;
+}
+
+.tags-section {
+  margin: 15px 0;
+}
+
+.tags-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #495057;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
 .history {
   margin-top: 30px;
 }
@@ -145,10 +221,13 @@ button:hover {
 </style>
 </head>
 <body>
-  <h1>🎬 抖音视频采集助手 4.0</h1>
+  <h1>🎬 抖音视频采集助手 5.0</h1>
   <div class="container">
-    <input id="url" placeholder="请输入抖音分享链接，例如：https://v.douyin.com/xxxxxx/" />
-    <button onclick="fetchData()">开始采集</button>
+    <input id="url" placeholder="请粘贴抖音分享文案或短链" />
+    <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+      <button onclick="fetchData()" style="flex: 1;">🚀 开始采集</button>
+      <button onclick="downloadVideo()" class="download-btn" style="flex: 0 0 140px;">📥 下载视频</button>
+    </div>
     <div id="status"></div>
     <div id="result"></div>
     <div class="history" id="history">
@@ -159,15 +238,26 @@ button:hover {
   </div>
 
 <script>
-const WEBHOOK_URL = 'https://chaim888.chaim.top/webhook-test/ca0a5e3b-e92a-4ed4-8a4f-31bac17c5424';
+// N8N工作流配置 - 用户提供的实际Webhook URL
+const WEBHOOK_URL = 'https://n8ntext.chaim.top/webhook/ca0a5e3b-e92a-4ed4-8a4f-31bac17c5424';
 
+/**
+ * 保存历史记录到本地存储
+ * @param {Object} data - 视频数据对象
+ */
 function saveHistory(data) {
   const history = JSON.parse(localStorage.getItem('douyinHistory') || '[]');
-  history.unshift(data);
+  history.unshift({
+    ...data,
+    timestamp: new Date().toLocaleString('zh-CN')
+  });
   localStorage.setItem('douyinHistory', JSON.stringify(history.slice(0, 10)));
   renderHistory();
 }
 
+/**
+ * 渲染历史记录列表
+ */
 function renderHistory() {
   const historyDiv = document.getElementById('historyList');
   const history = JSON.parse(localStorage.getItem('douyinHistory') || '[]');
@@ -180,78 +270,334 @@ function renderHistory() {
       <div class="title">${item.title || '无标题'}</div>
       <div class="author">作者：${item.author || '未知'}</div>
       <div class="likes">❤️ ${item.likes || 0} 赞</div>
+      <div style="font-size:12px;color:#666;margin-top:4px;">${item.timestamp || ''}</div>
     </div>
   `).join('');
 }
 
+/**
+ * 导出历史记录为CSV文件
+ */
 function exportCSV() {
   const history = JSON.parse(localStorage.getItem('douyinHistory') || '[]');
   if (history.length === 0) return alert("没有数据可导出～");
   const csv = [
-    ["标题", "作者", "点赞数", "视频链接"],
-    ...history.map(h => [h.title || '', h.author || '', h.likes || '', h.video_url || ''])
-  ].map(row => row.join(",")).join("\n");
+    ["标题", "作者", "点赞数", "视频链接", "采集时间"],
+    ...history.map(h => [
+      h.title || '', 
+      h.author || '', 
+      h.likes || '', 
+      h.video_url || '',
+      h.timestamp || ''
+    ])
+  ].map(row => row.map(cell => `"${cell}"`).join(",")).join("\n");
   const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "douyin_history.csv";
+  a.download = `douyin_history_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
 }
 
+/**
+ * 提取抖音链接的函数
+ * @param {string} text - 输入文本
+ * @returns {string|null} - 提取到的链接或null
+ */
+function extractDouyinUrl(text) {
+  // 支持多种抖音链接格式
+  const patterns = [
+    // 短链格式: https://v.douyin.com/xxxxxxx/
+    /(https?:\/\/v\.douyin\.com\/[A-Za-z0-9]+\/?)/,
+    // 完整链接格式: https://www.douyin.com/video/数字ID
+    /(https?:\/\/www\.douyin\.com\/video\/\d+)/,
+    // 移动端链接格式
+    /(https?:\/\/m\.douyin\.com\/video\/\d+)/
+  ];
+  
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match) {
+      return match[1];
+    }
+  }
+  return null;
+}
+
+/**
+ * 主要的数据采集函数
+ */
 async function fetchData() {
-  const inputUrl = document.getElementById('url').value.trim();
+  let inputUrl = document.getElementById('url').value.trim();
   const resultDiv = document.getElementById('result');
   const statusDiv = document.getElementById('status');
 
   if (!inputUrl) {
-    statusDiv.innerHTML = '<p class="error">请输入抖音分享链接</p>';
+    statusDiv.innerHTML = '<p class="error">请输入抖音分享链接或文案</p>';
     return;
   }
-  if (!/^https?:\/\/v\.douyin\.com\//.test(inputUrl)) {
-    statusDiv.innerHTML = '<p class="error">❌ 链接格式不正确，请输入抖音分享链接</p>';
+
+  // 🔍 智能提取抖音链接
+  const extractedUrl = extractDouyinUrl(inputUrl);
+  if (extractedUrl) {
+    inputUrl = extractedUrl;
+    console.log('✅ 提取到的链接:', inputUrl);
+  } else {
+    statusDiv.innerHTML = '<p class="error">❌ 未检测到有效的抖音链接，请重新输入</p>';
     return;
   }
 
   resultDiv.innerHTML = '';
-  statusDiv.innerHTML = '<div class="spinner"></div><p class="loading">采集中，请稍候...</p>';
+  statusDiv.innerHTML = '<div class="spinner"></div><p class="loading">正在采集中，请稍候...</p>';
 
   try {
+    // 发送到N8N工作流 - 匹配N8N期望的格式
+    const payload = {
+      text: document.getElementById('url').value.trim(), // 发送完整的输入文本，包含分享内容
+      url: inputUrl,
+      timestamp: new Date().toISOString(),
+      source: 'douyin-capture-tool'
+    };
+
+    console.log('📤 发送到N8N工作流:', payload);
+
     const res = await fetch(WEBHOOK_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: inputUrl })
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'User-Agent': 'Douyin-Capture-Tool/5.0',
+        'Origin': window.location.origin
+      },
+      mode: 'cors',
+      body: JSON.stringify(payload)
     });
 
-    if (!res.ok) throw new Error('请求失败');
+    console.log('📥 响应状态:', res.status, res.statusText);
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error('❌ 服务器错误响应:', errorText);
+      throw new Error(`HTTP ${res.status}: ${res.statusText} - ${errorText}`);
+    }
 
     const data = await res.json();
     statusDiv.innerHTML = '';
 
-    const { title, author, likes, cover, video_url } = data;
+    console.log('📥 N8N返回数据:', data);
+
+    // 处理数组格式的返回数据
+    const videoData = Array.isArray(data) ? data[0] : data;
+    
+    // 提取数据字段
+    const title = videoData.视频描述 || videoData.title || '无标题';
+    const author = videoData.作者信息?.作者昵称 || videoData.author || '未知';
+    const likes = videoData.视频数据?.点赞数 || videoData.likes || 0;
+    const comments = videoData.视频数据?.评论数 || videoData.comments || 0;
+    const shares = videoData.视频数据?.分享数 || videoData.shares || 0;
+    const collects = videoData.视频数据?.收藏数 || videoData.collects || 0;
+    const duration = videoData.视频时长 || videoData.duration || '未知';
+    const publishTime = videoData.发布时间 || videoData.publish_time || '未知';
+    const videoUrl = videoData.资源链接?.视频直链 || videoData.video_url || '';
+    const douyinId = videoData.作者信息?.抖音号 || videoData.douyin_id || '';
+    const videoId = videoData.视频ID || videoData.video_id || '';
+    const tags = videoData.话题标签 || [];
+    const category = videoData.内容分类?.完整分类路径 || '';
+    
+    // 构建话题标签HTML
+    const tagsHtml = tags.length > 0 ? 
+      `<div class="tags-section">
+        <div class="tags-title">🏷️ 话题标签：</div>
+        <div class="tags-container">
+          ${tags.map(tag => `<span class="tag">#${tag.话题名称 || tag.name || tag}</span>`).join('')}
+        </div>
+      </div>` : '';
+    
     resultDiv.innerHTML = `
       <div class="card">
-        ${cover ? `<img src="${cover}" alt="封面图" />` : ''}
-        <div class="title">${title || '无标题'}</div>
-        <div class="author">作者：${author || '未知'}</div>
-        <div class="likes">❤️ 点赞数：${likes || 0}</div>
-        ${video_url ? `<div class="copy-btn" onclick="copyLink('${video_url}')">📋 复制下载链接</div>` : ''}
+        <div class="title">${title}</div>
+        <div class="author">👤 作者：${author} ${douyinId ? `(${douyinId})` : ''}</div>
+        <div class="stats-grid">
+          <div class="stat-item">❤️ ${likes}</div>
+          <div class="stat-item">💬 ${comments}</div>
+          <div class="stat-item">📤 ${shares}</div>
+          <div class="stat-item">⭐ ${collects}</div>
+        </div>
+        <div class="video-info">
+          <div>⏱️ 时长：${duration}</div>
+          <div>📅 发布：${publishTime}</div>
+          ${videoId ? `<div>🆔 视频ID：${videoId}</div>` : ''}
+          ${category ? `<div>📂 分类：${category}</div>` : ''}
+        </div>
+        ${tagsHtml}
+        <div style="margin-top:10px;">
+          ${videoUrl ? `<div class="copy-btn" onclick="copyLink('${videoUrl}')">📋 复制下载链接</div>` : ''}
+          <div class="copy-btn" onclick="copyLink('${inputUrl}')" style="margin-left:8px;background:#007bff;">🔗 复制原链接</div>
+        </div>
       </div>
     `;
-    saveHistory({ title, author, likes, video_url });
+    
+    // 保存当前视频数据到全局变量，供下载功能使用
+    window.currentVideoData = {
+      title, 
+      author, 
+      likes,
+      comments,
+      shares,
+      collects,
+      duration,
+      publishTime,
+      videoUrl, 
+      original_url: inputUrl,
+      douyinId,
+      videoId
+    };
+    
+    // 保存到历史记录
+    saveHistory(window.currentVideoData);
+
   } catch (err) {
-    console.error(err);
-    statusDiv.innerHTML = '<p class="error">❌ 出错啦，请检查链接或稍后重试。</p>';
+    console.error('❌ 请求失败:', err);
+    
+    let errorMessage = '网络连接失败';
+    let suggestion = '请检查N8N工作流是否正常运行';
+    
+    if (err.name === 'TypeError' && err.message.includes('CORS')) {
+      errorMessage = 'CORS跨域问题';
+      suggestion = '请确保N8N工作流允许跨域请求';
+    } else if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
+      errorMessage = '网络请求被阻止';
+      suggestion = '请检查网络连接或防火墙设置';
+    } else if (err.message.includes('HTTP 404')) {
+      errorMessage = 'Webhook地址不存在';
+      suggestion = '请检查N8N工作流的Webhook URL是否正确';
+    } else if (err.message.includes('HTTP 500')) {
+      errorMessage = 'N8N服务器内部错误';
+      suggestion = '请检查N8N工作流的配置和日志';
+    } else if (err.message) {
+      errorMessage = err.message;
+    }
+    
+    statusDiv.innerHTML = `
+      <div class="error">
+        <p>❌ 采集失败</p>
+        <p style="font-size:12px;margin-top:5px;">错误类型: ${err.name}</p>
+        <p style="font-size:11px;margin-top:3px;">${errorMessage}</p>
+        <p style="font-size:10px;color:#888;margin-top:5px;">${suggestion}</p>
+        <p style="font-size:10px;color:#888;margin-top:3px;">详细信息请查看控制台</p>
+      </div>
+    `;
   }
 }
 
-function copyLink(url) {
-  navigator.clipboard.writeText(url).then(() => {
-    alert('✅ 下载链接已复制！');
+/**
+ * 复制文本到剪贴板
+ * @param {string} text - 要复制的文本
+ */
+function copyLink(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    // 创建临时提示
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #2ecc71;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      z-index: 1000;
+      font-size: 14px;
+    `;
+    toast.textContent = '✅ 已复制到剪贴板！';
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      document.body.removeChild(toast);
+    }, 2000);
+  }).catch(err => {
+    console.error('复制失败:', err);
+    alert('复制失败，请手动复制');
   });
 }
 
-renderHistory();
+/**
+ * 测试N8N连接
+ */
+/**
+ * 下载视频功能
+ */
+async function downloadVideo() {
+  const statusDiv = document.getElementById('status');
+  const resultDiv = document.getElementById('result');
+  
+  // 检查是否有采集到的视频数据
+  if (!window.currentVideoData || !window.currentVideoData.videoUrl) {
+    statusDiv.innerHTML = `
+      <div class="error">
+        <p>❌ 请先采集视频数据</p>
+        <p style="font-size:12px;">点击"开始采集"按钮获取视频信息后再下载</p>
+      </div>
+    `;
+    setTimeout(() => statusDiv.innerHTML = '', 3000);
+    return;
+  }
+  
+  const videoUrl = window.currentVideoData.videoUrl;
+  const title = window.currentVideoData.title || '抖音视频';
+  
+  statusDiv.innerHTML = '<div class="spinner"></div><p>正在准备下载...</p>';
+  
+  try {
+    // 创建下载链接
+    const link = document.createElement('a');
+    link.href = videoUrl;
+    link.download = `${title.substring(0, 50)}.mp4`; // 限制文件名长度
+    link.target = '_blank';
+    
+    // 触发下载
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    statusDiv.innerHTML = `
+      <div style="color:#2ecc71;">
+        <p>✅ 下载已开始！</p>
+        <p style="font-size:12px;">如果下载未开始，请点击"复制下载链接"手动下载</p>
+      </div>
+    `;
+    
+    console.log('📥 开始下载视频:', videoUrl);
+    
+  } catch (err) {
+    console.error('❌ 下载失败:', err);
+    statusDiv.innerHTML = `
+      <div class="error">
+        <p>❌ 下载失败</p>
+        <p style="font-size:12px;">请尝试复制下载链接手动下载</p>
+      </div>
+    `;
+  }
+  
+  setTimeout(() => {
+    statusDiv.innerHTML = '';
+  }, 4000);
+}
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+  renderHistory();
+  
+  // 添加回车键支持
+  document.getElementById('url').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      fetchData();
+    }
+  });
+  
+  console.log('🚀 抖音视频采集助手 5.0 已启动');
+  console.log('📡 N8N Webhook URL:', WEBHOOK_URL);
+});
 </script>
 </body>
 </html>
