@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>抖音视频采集助手 5.0</title>
+<title>抖音视频采集助手 6.0 - 文案分析版</title>
 <style>
 :root {
   --bg: #f7f7f7;
@@ -218,10 +218,290 @@ button:hover {
   border-bottom: 1px solid #ccc3;
 }
 .error { color: #e74c3c; margin-top: 10px; text-align: center; }
+
+/* 文案分析模块样式 */
+.analysis-section {
+  margin-top: 20px;
+  padding: 20px;
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px var(--shadow);
+}
+
+.analysis-section h3 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 8px;
+}
+
+.analysis-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.analysis-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.stat-box {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 15px 0;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  .stat-card {
+    background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+  }
+}
+
+.stat-card .number {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.stat-card .label {
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+}
+
+.keywords-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.keyword-tag {
+  background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.keyword-tag .count {
+  background: rgba(255,255,255,0.3);
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+.sentiment-bar {
+  height: 30px;
+  background: #eee;
+  border-radius: 15px;
+  overflow: hidden;
+  display: flex;
+  margin: 10px 0;
+}
+
+.sentiment-positive {
+  background: linear-gradient(90deg, #00b894, #55efc4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.sentiment-neutral {
+  background: linear-gradient(90deg, #fdcb6e, #ffeaa7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.sentiment-negative {
+  background: linear-gradient(90deg, #e74c3c, #fab1a0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.content-type-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 5px;
+}
+
+.type-promotion { background: #ff7675; color: white; }
+.type-sharing { background: #74b9ff; color: white; }
+.type-tutorial { background: #a29bfe; color: white; }
+.type-entertainment { background: #fd79a8; color: white; }
+.type-story { background: #00cec9; color: white; }
+
+.analysis-report {
+  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+  border: 1px solid #667eea30;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 15px;
+}
+
+.report-item {
+  margin: 12px 0;
+  padding: 10px;
+  background: var(--card);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent);
+}
+
+.report-item .label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 5px;
+}
+
+.report-item .value {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.analysis-history {
+  margin-top: 20px;
+}
+
+.analysis-history-item {
+  padding: 12px;
+  margin: 8px 0;
+  background: var(--card);
+  border-radius: 8px;
+  border-left: 3px solid #667eea;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.analysis-history-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.analysis-history-item .title {
+  font-weight: bold;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.analysis-history-item .meta {
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 15px;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.tab:hover {
+  background: #f5f5f5;
+}
+
+.tab.active {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  .tab:hover {
+    background: #333;
+  }
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.emoji-stats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+.emoji-item {
+  background: var(--card);
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  box-shadow: 0 2px 5px var(--shadow);
+}
+
+.cta-highlight {
+  background: linear-gradient(135deg, #ff6b6b20 0%, #ee5a2420 100%);
+  border: 1px dashed #ff6b6b;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.export-analysis-btn {
+  background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.export-analysis-btn:hover {
+  opacity: 0.9;
+}
 </style>
 </head>
 <body>
-  <h1>🎬 抖音视频采集助手 5.0</h1>
+  <h1>🎬 抖音视频采集助手 6.0</h1>
   <div class="container">
     <input id="url" placeholder="请粘贴抖音分享文案或短链" />
     <div style="display: flex; gap: 8px; margin-bottom: 10px;">
@@ -230,8 +510,78 @@ button:hover {
     </div>
     <div id="status"></div>
     <div id="result"></div>
+
+    <!-- 文案分析模块 -->
+    <div class="analysis-section" id="analysisSection" style="display: none;">
+      <h3>📝 文案分析报告</h3>
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('overview')">概览</div>
+        <div class="tab" onclick="switchTab('keywords')">关键词</div>
+        <div class="tab" onclick="switchTab('sentiment')">情感分析</div>
+        <div class="tab" onclick="switchTab('style')">风格分析</div>
+      </div>
+
+      <!-- 概览Tab -->
+      <div class="tab-content active" id="tab-overview">
+        <div class="stat-box">
+          <div class="stat-card">
+            <div class="number" id="charCount">0</div>
+            <div class="label">总字数</div>
+          </div>
+          <div class="stat-card">
+            <div class="number" id="sentenceCount">0</div>
+            <div class="label">句子数</div>
+          </div>
+          <div class="stat-card">
+            <div class="number" id="emojiCount">0</div>
+            <div class="label">表情数</div>
+          </div>
+        </div>
+        <div id="contentTypeContainer"></div>
+        <div id="overviewReport"></div>
+      </div>
+
+      <!-- 关键词Tab -->
+      <div class="tab-content" id="tab-keywords">
+        <h4>🔑 核心关键词</h4>
+        <div class="keywords-container" id="keywordsContainer"></div>
+        <h4 style="margin-top:15px;">🏷️ 话题标签</h4>
+        <div class="keywords-container" id="hashtagsContainer"></div>
+      </div>
+
+      <!-- 情感分析Tab -->
+      <div class="tab-content" id="tab-sentiment">
+        <h4>💭 情感倾向分析</h4>
+        <div class="sentiment-bar" id="sentimentBar"></div>
+        <div id="sentimentDetail"></div>
+        <div id="emotionWords"></div>
+      </div>
+
+      <!-- 风格分析Tab -->
+      <div class="tab-content" id="tab-style">
+        <h4>✨ 文案风格特征</h4>
+        <div id="styleAnalysis"></div>
+        <h4 style="margin-top:15px;">📢 行动号召语（CTA）</h4>
+        <div id="ctaAnalysis"></div>
+      </div>
+
+      <div style="margin-top: 20px; display: flex; gap: 10px;">
+        <button class="export-analysis-btn" onclick="exportAnalysisReport()">📄 导出分析报告</button>
+        <button class="export-analysis-btn" onclick="copyAnalysisText()" style="background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);">📋 复制文案</button>
+      </div>
+    </div>
+
+    <button class="analysis-btn" id="analysisBtn" onclick="analyzeContent()" style="display: none; width: 100%;">📊 开始文案分析</button>
+
+    <!-- 分析历史记录 -->
+    <div class="analysis-history" id="analysisHistory">
+      <h2>📊 分析历史</h2>
+      <div id="analysisHistoryList"></div>
+      <button class="export-btn" onclick="exportAnalysisCSV()" style="background: #667eea;">📦 导出分析记录</button>
+    </div>
+
     <div class="history" id="history">
-      <h2>📜 历史记录</h2>
+      <h2>📜 采集历史</h2>
       <div id="historyList"></div>
       <button class="export-btn" onclick="exportCSV()">📦 导出历史记录 CSV</button>
     </div>
@@ -437,24 +787,29 @@ async function fetchData() {
       </div>
     `;
     
-    // 保存当前视频数据到全局变量，供下载功能使用
+    // 保存当前视频数据到全局变量，供下载功能和文案分析使用
     window.currentVideoData = {
-      title, 
-      author, 
+      title,
+      author,
       likes,
       comments,
       shares,
       collects,
       duration,
       publishTime,
-      videoUrl, 
+      videoUrl,
       original_url: inputUrl,
       douyinId,
-      videoId
+      videoId,
+      tags,        // 保存话题标签供分析使用
+      category     // 保存内容分类供分析使用
     };
-    
+
     // 保存到历史记录
     saveHistory(window.currentVideoData);
+
+    // 显示文案分析按钮
+    document.getElementById('analysisBtn').style.display = 'block';
 
   } catch (err) {
     console.error('❌ 请求失败:', err);
@@ -584,19 +939,593 @@ async function downloadVideo() {
   }, 4000);
 }
 
+// ==================== 文案分析模块 ====================
+
+// 情感词库
+const SENTIMENT_DICT = {
+  positive: ['好', '棒', '赞', '喜欢', '爱', '美', '漂亮', '开心', '快乐', '幸福', '完美', '优秀', '精彩', '惊艳', '绝了', '太棒', '推荐', '必买', '超值', '划算', '值得', '满意', '舒服', '期待', '感动', '治愈', '温暖', '甜蜜', '浪漫', '可爱', '宝藏', '神仙', '绝绝子', 'yyds', '无敌', '顶级', '高级', '惊喜', '感谢', '厉害', '牛', '强', '香', '好吃', '好看', '好用'],
+  negative: ['差', '烂', '坏', '丑', '难', '糟糕', '失望', '后悔', '垃圾', '不好', '不行', '难吃', '难看', '难用', '踩雷', '避雷', '别买', '不推荐', '坑', '假', '贵', '亏', '难过', '伤心', '生气', '讨厌', '无聊', '累', '烦', '恶心', '可怕', '危险', '骗', '黑心']
+};
+
+// CTA行动号召词
+const CTA_KEYWORDS = ['点赞', '关注', '收藏', '转发', '评论', '私信', '留言', '戳', '点击', '看看', '试试', '快来', '赶紧', '立即', '马上', '速度', '抓紧', '别错过', '不要错过', '必看', '必入', '必买', '链接', '购物车', '下单', '拍', '冲', '抢', '囤', '入手'];
+
+// 内容类型关键词
+const CONTENT_TYPE_KEYWORDS = {
+  promotion: ['好物', '推荐', '必买', '测评', '开箱', '分享', '安利', '种草', '回购', '平价', '替代', '链接', '购物车', '下单', '优惠', '折扣', '券'],
+  tutorial: ['教程', '教你', '学会', '技巧', '方法', '步骤', '怎么', '如何', '秘诀', '攻略', '干货', '入门', '进阶'],
+  entertainment: ['搞笑', '哈哈', '笑死', '绝了', '离谱', '整活', '段子', '沙雕', '魔性', '上头', '洗脑'],
+  story: ['故事', '经历', '分享', '记录', '日常', 'vlog', '一天', '生活', '旅行', '打卡'],
+  sharing: ['分享', '记录', '日常', '生活', '穿搭', '妆容', '美食', '探店', '打卡', '氛围']
+};
+
+// 当前分析数据
+let currentAnalysis = null;
+
+/**
+ * Tab切换功能
+ */
+function switchTab(tabName) {
+  // 移除所有active状态
+  document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+  // 添加当前active状态
+  document.querySelector(`.tab:nth-child(${['overview', 'keywords', 'sentiment', 'style'].indexOf(tabName) + 1})`).classList.add('active');
+  document.getElementById(`tab-${tabName}`).classList.add('active');
+}
+
+/**
+ * 主要的文案分析函数
+ */
+function analyzeContent() {
+  if (!window.currentVideoData || !window.currentVideoData.title) {
+    alert('请先采集视频数据！');
+    return;
+  }
+
+  const text = window.currentVideoData.title;
+  const tags = window.currentVideoData.tags || [];
+
+  // 执行分析
+  const analysis = {
+    // 基础统计
+    charCount: text.replace(/\s/g, '').length,
+    sentenceCount: text.split(/[。！？.!?]+/).filter(s => s.trim()).length,
+    emojiCount: (text.match(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu) || []).length,
+    emojis: text.match(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu) || [],
+
+    // 关键词提取
+    keywords: extractKeywords(text),
+    hashtags: extractHashtags(text, tags),
+
+    // 情感分析
+    sentiment: analyzeSentiment(text),
+
+    // 内容类型
+    contentType: detectContentType(text),
+
+    // 风格分析
+    style: analyzeStyle(text),
+
+    // CTA分析
+    cta: analyzeCTA(text),
+
+    // 原始数据
+    originalText: text,
+    author: window.currentVideoData.author,
+    timestamp: new Date().toLocaleString('zh-CN')
+  };
+
+  currentAnalysis = analysis;
+
+  // 渲染分析结果
+  renderAnalysisResult(analysis);
+
+  // 显示分析区域
+  document.getElementById('analysisSection').style.display = 'block';
+  document.getElementById('analysisSection').scrollIntoView({ behavior: 'smooth' });
+
+  // 保存到分析历史
+  saveAnalysisHistory(analysis);
+
+  console.log('📊 文案分析完成:', analysis);
+}
+
+/**
+ * 提取关键词
+ */
+function extractKeywords(text) {
+  // 移除标点符号和特殊字符
+  const cleanText = text.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, ' ');
+
+  // 简单的中文分词（按2-4字词组提取）
+  const words = [];
+  const segments = cleanText.split(/\s+/).filter(s => s.length > 1);
+
+  segments.forEach(segment => {
+    if (segment.length >= 2 && segment.length <= 6) {
+      words.push(segment);
+    }
+    // 提取2-3字词组
+    for (let i = 0; i < segment.length - 1; i++) {
+      if (i + 2 <= segment.length) words.push(segment.substring(i, i + 2));
+      if (i + 3 <= segment.length) words.push(segment.substring(i, i + 3));
+    }
+  });
+
+  // 统计词频
+  const wordCount = {};
+  words.forEach(word => {
+    if (word.length >= 2) {
+      wordCount[word] = (wordCount[word] || 0) + 1;
+    }
+  });
+
+  // 过滤停用词
+  const stopWords = ['的', '了', '是', '在', '我', '有', '和', '就', '不', '人', '都', '一', '一个', '上', '也', '很', '到', '说', '要', '去', '你', '会', '着', '没有', '看', '好', '自己', '这'];
+
+  // 返回top关键词
+  return Object.entries(wordCount)
+    .filter(([word]) => !stopWords.includes(word))
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([word, count]) => ({ word, count }));
+}
+
+/**
+ * 提取话题标签
+ */
+function extractHashtags(text, tags) {
+  // 从文本中提取#标签
+  const textTags = text.match(/#[^\s#]+/g) || [];
+
+  // 合并API返回的标签
+  const apiTags = tags.map(tag => {
+    const name = tag.话题名称 || tag.name || tag;
+    return `#${name}`;
+  });
+
+  // 去重合并
+  const allTags = [...new Set([...textTags, ...apiTags])];
+  return allTags.slice(0, 15);
+}
+
+/**
+ * 情感分析
+ */
+function analyzeSentiment(text) {
+  let positiveCount = 0;
+  let negativeCount = 0;
+  const positiveWords = [];
+  const negativeWords = [];
+
+  SENTIMENT_DICT.positive.forEach(word => {
+    const regex = new RegExp(word, 'g');
+    const matches = text.match(regex);
+    if (matches) {
+      positiveCount += matches.length;
+      positiveWords.push({ word, count: matches.length });
+    }
+  });
+
+  SENTIMENT_DICT.negative.forEach(word => {
+    const regex = new RegExp(word, 'g');
+    const matches = text.match(regex);
+    if (matches) {
+      negativeCount += matches.length;
+      negativeWords.push({ word, count: matches.length });
+    }
+  });
+
+  const total = positiveCount + negativeCount || 1;
+  const positiveRatio = Math.round((positiveCount / total) * 100);
+  const negativeRatio = Math.round((negativeCount / total) * 100);
+  const neutralRatio = 100 - positiveRatio - negativeRatio;
+
+  let tendency = '中性';
+  if (positiveRatio > 60) tendency = '积极正面';
+  else if (negativeRatio > 40) tendency = '消极负面';
+  else if (positiveRatio > negativeRatio) tendency = '偏正面';
+  else if (negativeRatio > positiveRatio) tendency = '偏负面';
+
+  return {
+    positive: positiveRatio,
+    negative: negativeRatio,
+    neutral: neutralRatio > 0 ? neutralRatio : 0,
+    tendency,
+    positiveWords: positiveWords.slice(0, 5),
+    negativeWords: negativeWords.slice(0, 5)
+  };
+}
+
+/**
+ * 检测内容类型
+ */
+function detectContentType(text) {
+  const scores = {};
+
+  Object.entries(CONTENT_TYPE_KEYWORDS).forEach(([type, keywords]) => {
+    let score = 0;
+    keywords.forEach(keyword => {
+      if (text.includes(keyword)) score++;
+    });
+    scores[type] = score;
+  });
+
+  // 找出最高分的类型
+  const maxType = Object.entries(scores).sort((a, b) => b[1] - a[1])[0];
+
+  const typeNames = {
+    promotion: '带货种草',
+    tutorial: '教程攻略',
+    entertainment: '娱乐搞笑',
+    story: '故事记录',
+    sharing: '生活分享'
+  };
+
+  return {
+    type: maxType[0],
+    name: typeNames[maxType[0]] || '其他',
+    score: maxType[1],
+    allScores: scores
+  };
+}
+
+/**
+ * 分析文案风格
+ */
+function analyzeStyle(text) {
+  const features = [];
+
+  // 检测表情符号使用
+  const emojiCount = (text.match(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu) || []).length;
+  if (emojiCount > 3) features.push({ name: '表情丰富', desc: `使用了${emojiCount}个表情符号`, icon: '😊' });
+
+  // 检测感叹号使用
+  const exclamationCount = (text.match(/[！!]/g) || []).length;
+  if (exclamationCount > 2) features.push({ name: '情绪饱满', desc: `${exclamationCount}个感叹号，表达强烈`, icon: '❗' });
+
+  // 检测问句
+  const questionCount = (text.match(/[？?]/g) || []).length;
+  if (questionCount > 0) features.push({ name: '互动引导', desc: `${questionCount}个问句，引发思考`, icon: '❓' });
+
+  // 检测数字使用
+  const numberCount = (text.match(/\d+/g) || []).length;
+  if (numberCount > 2) features.push({ name: '数据支撑', desc: `引用${numberCount}处数据`, icon: '📊' });
+
+  // 检测@提及
+  const mentionCount = (text.match(/@[\w\u4e00-\u9fa5]+/g) || []).length;
+  if (mentionCount > 0) features.push({ name: '社交互动', desc: `@了${mentionCount}个账号`, icon: '👥' });
+
+  // 检测网络热词
+  const buzzwords = ['yyds', '绝绝子', '芭比Q', '栓Q', '真的会谢', 'DNA动了', '破防', '上头', 'respect', '无语'];
+  const foundBuzzwords = buzzwords.filter(word => text.toLowerCase().includes(word.toLowerCase()));
+  if (foundBuzzwords.length > 0) features.push({ name: '网络热词', desc: `使用: ${foundBuzzwords.join(', ')}`, icon: '🔥' });
+
+  // 检测文案长度
+  const charCount = text.replace(/\s/g, '').length;
+  if (charCount < 30) features.push({ name: '简洁精炼', desc: '文案简短有力', icon: '✂️' });
+  else if (charCount > 100) features.push({ name: '内容详实', desc: '文案内容丰富', icon: '📝' });
+
+  return features;
+}
+
+/**
+ * 分析CTA行动号召
+ */
+function analyzeCTA(text) {
+  const foundCTAs = [];
+
+  CTA_KEYWORDS.forEach(keyword => {
+    if (text.includes(keyword)) {
+      foundCTAs.push(keyword);
+    }
+  });
+
+  return {
+    hasCTA: foundCTAs.length > 0,
+    keywords: foundCTAs,
+    count: foundCTAs.length,
+    strength: foundCTAs.length > 3 ? '强' : foundCTAs.length > 0 ? '中' : '弱'
+  };
+}
+
+/**
+ * 渲染分析结果
+ */
+function renderAnalysisResult(analysis) {
+  // 概览Tab
+  document.getElementById('charCount').textContent = analysis.charCount;
+  document.getElementById('sentenceCount').textContent = analysis.sentenceCount;
+  document.getElementById('emojiCount').textContent = analysis.emojiCount;
+
+  // 内容类型
+  const typeClass = {
+    promotion: 'type-promotion',
+    tutorial: 'type-tutorial',
+    entertainment: 'type-entertainment',
+    story: 'type-story',
+    sharing: 'type-sharing'
+  };
+  document.getElementById('contentTypeContainer').innerHTML = `
+    <div style="margin: 15px 0;">
+      <span class="content-type-badge ${typeClass[analysis.contentType.type] || 'type-sharing'}">
+        📌 ${analysis.contentType.name}
+      </span>
+    </div>
+  `;
+
+  // 概览报告
+  document.getElementById('overviewReport').innerHTML = `
+    <div class="analysis-report">
+      <div class="report-item">
+        <div class="label">文案原文</div>
+        <div class="value" style="word-break: break-all;">${analysis.originalText}</div>
+      </div>
+      <div class="report-item">
+        <div class="label">作者</div>
+        <div class="value">${analysis.author}</div>
+      </div>
+      <div class="report-item">
+        <div class="label">分析时间</div>
+        <div class="value">${analysis.timestamp}</div>
+      </div>
+    </div>
+  `;
+
+  // 关键词Tab
+  document.getElementById('keywordsContainer').innerHTML = analysis.keywords.length > 0 ?
+    analysis.keywords.map(k => `
+      <div class="keyword-tag">
+        ${k.word}
+        <span class="count">${k.count}</span>
+      </div>
+    `).join('') :
+    '<p style="color:#888;">未提取到明显关键词</p>';
+
+  document.getElementById('hashtagsContainer').innerHTML = analysis.hashtags.length > 0 ?
+    analysis.hashtags.map(tag => `
+      <div class="keyword-tag" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        ${tag}
+      </div>
+    `).join('') :
+    '<p style="color:#888;">未发现话题标签</p>';
+
+  // 情感分析Tab
+  document.getElementById('sentimentBar').innerHTML = `
+    <div class="sentiment-positive" style="width: ${analysis.sentiment.positive}%">${analysis.sentiment.positive > 10 ? analysis.sentiment.positive + '%' : ''}</div>
+    <div class="sentiment-neutral" style="width: ${analysis.sentiment.neutral}%">${analysis.sentiment.neutral > 10 ? analysis.sentiment.neutral + '%' : ''}</div>
+    <div class="sentiment-negative" style="width: ${analysis.sentiment.negative}%">${analysis.sentiment.negative > 10 ? analysis.sentiment.negative + '%' : ''}</div>
+  `;
+
+  document.getElementById('sentimentDetail').innerHTML = `
+    <div class="report-item">
+      <div class="label">情感倾向</div>
+      <div class="value">${analysis.sentiment.tendency}</div>
+    </div>
+  `;
+
+  let emotionWordsHtml = '';
+  if (analysis.sentiment.positiveWords.length > 0) {
+    emotionWordsHtml += `<div style="margin-top:10px;"><strong style="color:#00b894;">正面词汇：</strong>${analysis.sentiment.positiveWords.map(w => w.word).join('、')}</div>`;
+  }
+  if (analysis.sentiment.negativeWords.length > 0) {
+    emotionWordsHtml += `<div style="margin-top:5px;"><strong style="color:#e74c3c;">负面词汇：</strong>${analysis.sentiment.negativeWords.map(w => w.word).join('、')}</div>`;
+  }
+  document.getElementById('emotionWords').innerHTML = emotionWordsHtml || '<p style="color:#888;">未检测到明显情感词汇</p>';
+
+  // 风格分析Tab
+  document.getElementById('styleAnalysis').innerHTML = analysis.style.length > 0 ?
+    analysis.style.map(f => `
+      <div class="report-item">
+        <div class="label">${f.icon} ${f.name}</div>
+        <div class="value">${f.desc}</div>
+      </div>
+    `).join('') :
+    '<p style="color:#888;">文案风格较为常规</p>';
+
+  // CTA分析
+  document.getElementById('ctaAnalysis').innerHTML = analysis.cta.hasCTA ?
+    `<div class="cta-highlight">
+      <div><strong>CTA强度：</strong>${analysis.cta.strength}</div>
+      <div style="margin-top:8px;"><strong>发现的号召语：</strong>${analysis.cta.keywords.join('、')}</div>
+    </div>` :
+    '<p style="color:#888;">未发现明显的行动号召语</p>';
+}
+
+/**
+ * 保存分析历史
+ */
+function saveAnalysisHistory(analysis) {
+  const history = JSON.parse(localStorage.getItem('douyinAnalysisHistory') || '[]');
+  history.unshift({
+    id: Date.now(),
+    title: analysis.originalText.substring(0, 50) + (analysis.originalText.length > 50 ? '...' : ''),
+    author: analysis.author,
+    contentType: analysis.contentType.name,
+    sentiment: analysis.sentiment.tendency,
+    charCount: analysis.charCount,
+    timestamp: analysis.timestamp,
+    fullAnalysis: analysis
+  });
+  localStorage.setItem('douyinAnalysisHistory', JSON.stringify(history.slice(0, 20)));
+  renderAnalysisHistory();
+}
+
+/**
+ * 渲染分析历史列表
+ */
+function renderAnalysisHistory() {
+  const historyDiv = document.getElementById('analysisHistoryList');
+  const history = JSON.parse(localStorage.getItem('douyinAnalysisHistory') || '[]');
+
+  if (history.length === 0) {
+    historyDiv.innerHTML = '<p style="color:#888;">暂无分析记录</p>';
+    return;
+  }
+
+  historyDiv.innerHTML = history.map(item => `
+    <div class="analysis-history-item" onclick="loadAnalysisFromHistory(${item.id})">
+      <div class="title">${item.title}</div>
+      <div class="meta">
+        👤 ${item.author} | 📌 ${item.contentType} | 💭 ${item.sentiment} | 📝 ${item.charCount}字
+      </div>
+      <div class="meta">${item.timestamp}</div>
+    </div>
+  `).join('');
+}
+
+/**
+ * 从历史记录加载分析
+ */
+function loadAnalysisFromHistory(id) {
+  const history = JSON.parse(localStorage.getItem('douyinAnalysisHistory') || '[]');
+  const item = history.find(h => h.id === id);
+
+  if (item && item.fullAnalysis) {
+    currentAnalysis = item.fullAnalysis;
+    renderAnalysisResult(item.fullAnalysis);
+    document.getElementById('analysisSection').style.display = 'block';
+    document.getElementById('analysisSection').scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+/**
+ * 导出分析报告
+ */
+function exportAnalysisReport() {
+  if (!currentAnalysis) {
+    alert('暂无分析数据可导出！');
+    return;
+  }
+
+  const report = `
+# 抖音文案分析报告
+
+## 基本信息
+- **分析时间**: ${currentAnalysis.timestamp}
+- **作者**: ${currentAnalysis.author}
+
+## 文案原文
+${currentAnalysis.originalText}
+
+## 基础统计
+- 总字数: ${currentAnalysis.charCount}
+- 句子数: ${currentAnalysis.sentenceCount}
+- 表情数: ${currentAnalysis.emojiCount}
+
+## 内容类型
+${currentAnalysis.contentType.name}
+
+## 情感分析
+- 情感倾向: ${currentAnalysis.sentiment.tendency}
+- 正面: ${currentAnalysis.sentiment.positive}%
+- 中性: ${currentAnalysis.sentiment.neutral}%
+- 负面: ${currentAnalysis.sentiment.negative}%
+
+## 关键词
+${currentAnalysis.keywords.map(k => `- ${k.word} (${k.count}次)`).join('\n')}
+
+## 话题标签
+${currentAnalysis.hashtags.join(' ')}
+
+## 风格特征
+${currentAnalysis.style.map(s => `- ${s.name}: ${s.desc}`).join('\n')}
+
+## CTA分析
+- 行动号召强度: ${currentAnalysis.cta.strength}
+- 号召关键词: ${currentAnalysis.cta.keywords.join('、') || '无'}
+
+---
+由抖音视频采集助手6.0生成
+`;
+
+  const blob = new Blob([report], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `文案分析报告_${new Date().toISOString().slice(0,10)}.md`;
+  a.click();
+}
+
+/**
+ * 复制文案到剪贴板
+ */
+function copyAnalysisText() {
+  if (!currentAnalysis) {
+    alert('暂无文案可复制！');
+    return;
+  }
+
+  navigator.clipboard.writeText(currentAnalysis.originalText).then(() => {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #667eea;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      z-index: 1000;
+      font-size: 14px;
+    `;
+    toast.textContent = '✅ 文案已复制到剪贴板！';
+    document.body.appendChild(toast);
+    setTimeout(() => document.body.removeChild(toast), 2000);
+  });
+}
+
+/**
+ * 导出分析历史CSV
+ */
+function exportAnalysisCSV() {
+  const history = JSON.parse(localStorage.getItem('douyinAnalysisHistory') || '[]');
+  if (history.length === 0) {
+    alert('没有分析记录可导出！');
+    return;
+  }
+
+  const csv = [
+    ['文案摘要', '作者', '内容类型', '情感倾向', '字数', '关键词', '话题标签', '分析时间'],
+    ...history.map(h => [
+      h.title,
+      h.author,
+      h.contentType,
+      h.sentiment,
+      h.charCount,
+      h.fullAnalysis?.keywords?.map(k => k.word).join('/') || '',
+      h.fullAnalysis?.hashtags?.join(' ') || '',
+      h.timestamp
+    ])
+  ].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `抖音文案分析记录_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+// ==================== 文案分析模块结束 ====================
+
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', function() {
   renderHistory();
-  
+  renderAnalysisHistory();  // 初始化分析历史记录
+
   // 添加回车键支持
   document.getElementById('url').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
       fetchData();
     }
   });
-  
-  console.log('🚀 抖音视频采集助手 5.0 已启动');
+
+  console.log('🚀 抖音视频采集助手 6.0 - 文案分析版 已启动');
   console.log('📡 N8N Webhook URL:', WEBHOOK_URL);
+  console.log('📊 文案分析功能已加载');
 });
 </script>
 </body>
